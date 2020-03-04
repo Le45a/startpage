@@ -11,6 +11,7 @@ export default {
   },
   mounted() {
     // 组件挂载时启动计时器获取时间
+    this.date=new Date()// 防止时间一开始加载不出来
     this.setTimer()
   },
   beforeDestroy() {

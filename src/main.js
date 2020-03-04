@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import vueJsonp from 'vue-jsonp'
+import './plugins/element.js'
 
 Vue.use(vueJsonp)
 Vue.config.productionTip = false

@@ -1,6 +1,8 @@
 <template>
   <div class="home-container" :style="{'background-image':'url('+imgUrl+')'}">
-    <div class="search-container">search</div>
+    <div class="search-container">
+      <search />
+    </div>
     <div class="more-use-container">more-use-container</div>
     <div class="time-container">
       <timer />
@@ -11,7 +13,8 @@
   </div>
 </template>
 <script>
-import Timer from "./home/Timer.vue"
+import Timer from "../components/home/Timer.vue"
+import Search from "../components/home/Search.vue"
 
 export default {
   data() {
@@ -20,7 +23,8 @@ export default {
     }
   },
   components:{
-     Timer
+     Timer,
+     Search
   },
   created() {
     this.getImgUrl()
