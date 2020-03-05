@@ -55,22 +55,7 @@ export default {
   -o-background-size: cover;
   background-position: center 0;
 }
-.search-container {
-  width: 30%;
-}
-.more-use-container {
-  width: 30%;
-}
-.time-container {
-  width: 30%;
-}
-.todo-container {
-  width: 30%;
-}
-.learning-model-container {
-  width: 30%;
-}
-.config-container {
-  width: 30%;
+.search-container{
+  margin-top:20px;
 }
 </style>
