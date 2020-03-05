@@ -13,8 +13,8 @@
   </div>
 </template>
 <script>
-import Timer from "../components/home/Timer.vue"
-import Search from "../components/home/Search.vue"
+import Timer from '../components/home/Timer.vue'
+import Search from '../components/home/Search.vue'
 
 export default {
   data() {
@@ -22,19 +22,25 @@ export default {
       imgUrl: []
     }
   },
-  components:{
-     Timer,
-     Search
+  components: {
+    Timer,
+    Search
   },
   created() {
     this.getImgUrl()
   },
   methods: {
-    // 跨域请求bing每日推荐壁纸
+    // 跨域请求bing每日推荐壁纸,并保存到sessionStorage中
     getImgUrl() {
-      this.$jsonp('https://bing.ioliu.cn/v1').then(res => {
-        this.imgUrl = res.data.url
-      })
+      const sessionImgURL = sessionStorage.getItem('imgUrl')
+      if (sessionImgURL === null) {
+        this.$jsonp('https://bing.ioliu.cn/v1').then(res => {
+          this.imgUrl = res.data.url
+          sessionStorage.setItem('imgUrl', this.imgUrl)
+        })
+      } else {
+        this.imgUrl = sessionImgURL
+      }
     }
   }
 }
@@ -42,7 +48,7 @@ export default {
 
 <style lang="less" scoped>
 .home-container {
-  color:#fff;
+  color: #fff;
   position: fixed;
   top: 0;
   left: 0;
@@ -55,7 +61,7 @@ export default {
   -o-background-size: cover;
   background-position: center 0;
 }
-.search-container{
-  margin-top:20px;
+.search-container {
+  margin-top: 20px;
 }
 </style>
