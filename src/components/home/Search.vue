@@ -1,6 +1,11 @@
 <template>
   <div class="search-container">
-    <el-input class="search-input" v-model="input" placeholder="请输入内容"></el-input>
+    <el-input
+      class="search-input"
+      v-model="input"
+      :placeholder="placeholder"
+      @keyup.enter.native="OnInputSearch"
+    ></el-input>
     <div class="search-selecter-container">
       <div class="selected-item">
         <el-select v-model="value" placeholder="请选择" class="search-list" popper-class="option-item">
@@ -17,7 +22,7 @@
         </el-select>
       </div>
     </div>
-    <el-button class="search-button">搜索</el-button>
+    <el-button class="search-button" @click="OnButtonSearch">搜索</el-button>
   </div>
 </template>
 
@@ -44,7 +49,41 @@ export default {
         }
       ],
       value: '百度',
-      input: ''
+      input: '',
+      placeholder: '要了解什么呢？'
+    }
+  },
+  methods: {
+    // 敲击回车搜索
+    OnInputSearch(e) {
+      var keyCode = window.event ? e.keyCode : e.which //解决兼容
+      if (keyCode === 13) {
+        this.JumpToSearchPage(this.value)
+      }
+    },
+    // 通过按钮搜索
+    OnButtonSearch() {
+      this.JumpToSearchPage(this.value)
+    },
+    // 对搜索跳转的封装
+    JumpToSearchPage(name) {
+      if (this.input !== '') {
+        if (name === '百度') {
+          window.location.href = `https://www.baidu.com/s?wd=${this.input}`
+        }
+        if (name === '搜狗') {
+          window.location.href = `http://www.sogou.com/sogou?query=${this.input}`
+        }
+        if (name === 'Bing') {
+          window.location.href = `http://www.bing.com/search?q=${this.input}`
+        }
+        if (name === 'Google') {
+          window.location.href = `https://www.google.com/search?q=${this.input}`
+        }
+      }
+      else{
+        this.placeholder="请输入要查找的内容哦！"
+      }
     }
   }
 }
@@ -83,10 +122,12 @@ export default {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
-  .el-button:active,.el-button:hover,.el-button:focus{
+  .el-button:active,
+  .el-button:hover,
+  .el-button:focus {
     background-color: #08f;
-    color:#fff;
-    border:none;
+    color: #fff;
+    border: none;
   }
 }
 .option-item {
