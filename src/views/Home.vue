@@ -3,7 +3,9 @@
     <div class="search-container">
       <search />
     </div>
-    <div class="more-use-container">more-use-container</div>
+    <div class="more-use-container">
+      <more-use />
+    </div>
     <div class="time-container">
       <timer />
     </div>
@@ -15,6 +17,7 @@
 <script>
 import Timer from '../components/home/Timer.vue'
 import Search from '../components/home/Search.vue'
+import MoreUse from '../components/home/MoreUse.vue'
 
 export default {
   data() {
@@ -24,7 +27,8 @@ export default {
   },
   components: {
     Timer,
-    Search
+    Search,
+    MoreUse
   },
   created() {
     this.getImgUrl()

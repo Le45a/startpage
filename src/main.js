@@ -6,7 +6,7 @@ import axios from 'axios'
 import vueJsonp from 'vue-jsonp'
 import './plugins/element.js'
 
-Vue.use(vueJsonp)
+Vue.use(vueJsonp)// vue跨域解决
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
