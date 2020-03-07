@@ -1,26 +1,47 @@
 <template>
-  <div class="web-collect-container">
-    <div class="bg-color"></div>
-    <span>常用网站</span>
-    <div class="web-collect-item-container">
-      <div class="web-collect-item" v-for="(item,index) in moreUseData" :key="index">
-        <div class="web-content">
-          <div class="el-icon-close"></div>
-          <div class="img-container">
-            <img :src="iconUrlOrigin+item.url" alt />
+  <div>
+    <div class="web-collect-container">
+      <div class="bg-color"></div>
+      <span>常用网站</span>
+      <div class="web-collect-item-container">
+        <div class="web-collect-item" v-for="(item,index) in moreUseData" :key="index">
+          <div class="web-content">
+            <div class="el-icon-close" @click="DeleteItem(item)"></div>
+            <div class="img-container">
+              <img :src="iconUrlOrigin+item.url" :onerror="defaultImg" />
+            </div>
+            <span :title="item.webname" class="web-title">{{item.webname}}</span>
           </div>
-          <span class="web-title">{{item.webname}}</span>
         </div>
-      </div>
-      <div class="web-collect-item" v-if="moreUseData.length<10">
-        <div class="web-content">
-          <div class="img-container">
-            <div class="el-icon-plus"></div>
+        <div class="web-collect-item" v-if="moreUseData.length<10" @click="dialogFormVisible=true">
+          <div class="web-content">
+            <div class="img-container">
+              <div class="el-icon-plus"></div>
+            </div>
+            <span class="web-title">添加</span>
           </div>
-          <span class="web-title">添加</span>
         </div>
       </div>
     </div>
+    <el-dialog
+      title="添加收藏网站"
+      @close="ClearDialogInput"
+      :visible.sync="dialogFormVisible"
+      :append-to-body="true"
+    >
+      <div class="input-item">
+        <span>网站地址：</span>
+        <el-input v-model="newWebCollect.url" autocomplete="off"></el-input>
+      </div>
+      <div class="input-item">
+        <span>名称：</span>
+        <el-input v-model="newWebCollect.webname" autocomplete="off"></el-input>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="ClearDialogInput">取 消</el-button>
+        <el-button type="primary" @click="AppendItemToCollect">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -28,11 +49,49 @@
 export default {
   data() {
     return {
+      defaultImg: "this.src='" + require('../../assets/img/default.png') + "'",
       iconUrlOrigin: 'http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=',
-      moreUseData: []
+      moreUseData: [],
+      dialogFormVisible: false,
+      newWebCollect: {
+        url: '',
+        webname: ''
+      }
     }
   },
-  methods: {}
+  created() {
+    this.GetMoreUseData()
+  },
+  methods: {
+    GetMoreUseData() {
+      let storage = JSON.parse(localStorage.getItem('moreUseData'))
+      if (storage !== null && storage.length !== 0) {
+        this.moreUseData = storage
+      }
+    },
+    UpdataMoreUseData() {
+      localStorage.setItem('moreUseData', JSON.stringify(this.moreUseData))
+    },
+    AppendItemToCollect() {
+      this.moreUseData.push(JSON.parse(JSON.stringify(this.newWebCollect))) // 深拷贝
+      this.ClearDialogInput()
+      this.UpdataMoreUseData()
+    },
+    ClearDialogInput() {
+      this.dialogFormVisible = false
+      this.newWebCollect.url = ''
+      this.newWebCollect.webname = ''
+    },
+    DeleteItem(item) {
+      for (let i = 0; i < this.moreUseData.length; i++) {
+        if (this.moreUseData[i] === item) {
+          this.moreUseData.splice(i, 1)
+          break
+        }
+      }
+      this.UpdataMoreUseData()
+    }
+  }
 }
 </script>
 
@@ -40,6 +99,19 @@ export default {
 a {
   text-decoration: none;
   color: #fff;
+}
+.input-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  span {
+    width: 90px;
+    text-align: right;
+    margin-right: 20px;
+  }
 }
 .web-collect-container {
   width: 568px;
@@ -71,6 +143,7 @@ a {
       height: 100px;
       margin-left: 11.3px;
       margin-bottom: 20px;
+      transition: all 0.3s;
       .web-content {
         position: relative;
         padding-top: 10px;
@@ -90,7 +163,13 @@ a {
         .el-icon-close:hover {
           opacity: 1;
         }
-
+        .web-title {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          width: 60px;
+          transition: all 0.3s;
+        }
         .img-container {
           position: relative;
           background-color: #e5e7e8;
