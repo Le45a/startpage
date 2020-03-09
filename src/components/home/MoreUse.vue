@@ -63,6 +63,7 @@ export default {
     this.GetMoreUseData()
   },
   methods: {
+    // 获取本地缓存数据
     GetMoreUseData() {
       let storage = JSON.parse(localStorage.getItem('moreUseData'))
       if (storage !== null && storage.length !== 0) {
@@ -77,11 +78,13 @@ export default {
       this.ClearDialogInput()
       this.UpdataMoreUseData()
     },
+    // 提示框关闭处理
     ClearDialogInput() {
       this.dialogFormVisible = false
       this.newWebCollect.url = ''
       this.newWebCollect.webname = ''
     },
+    // 删除操作
     DeleteItem(item) {
       for (let i = 0; i < this.moreUseData.length; i++) {
         if (this.moreUseData[i] === item) {
