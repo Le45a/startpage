@@ -1,25 +1,28 @@
 <template>
-  <div>
-    <div class="web-collect-container">
-      <div class="bg-color"></div>
-      <span>常用网站</span>
-      <div class="web-collect-item-container">
-        <div class="web-collect-item" v-for="(item,index) in moreUseData" :key="index">
-          <div class="web-content">
-            <div class="el-icon-close" @click="DeleteItem(item)"></div>
-            <div class="img-container">
-              <img :src="iconUrlOrigin+item.url" :onerror="defaultImg" />
-            </div>
-            <span :title="item.webname" class="web-title">{{item.webname}}</span>
+  <div class="web-collect-container">
+    <div class="bg-color"></div>
+    <span>常用网站</span>
+    <div class="web-collect-item-container">
+      <div
+        class="web-collect-item"
+        v-for="(item,index) in moreUseData"
+        :key="index"
+        @click="GotoUrl(item.url)"
+      >
+        <div class="web-content">
+          <div class="el-icon-close" @click.stop="DeleteItem(item)"></div>
+          <div class="img-container">
+            <img :src="GetWebIcon(item.url)" :onerror="defaultImg" />
           </div>
+          <span :title="item.webname" class="web-title">{{item.webname}}</span>
         </div>
-        <div class="web-collect-item" v-if="moreUseData.length<10" @click="dialogFormVisible=true">
-          <div class="web-content">
-            <div class="img-container">
-              <div class="el-icon-plus"></div>
-            </div>
-            <span class="web-title">添加</span>
+      </div>
+      <div class="web-collect-item" v-if="moreUseData.length<10" @click="dialogFormVisible=true">
+        <div class="web-content">
+          <div class="img-container">
+            <div class="el-icon-plus"></div>
           </div>
+          <span class="web-title">添加</span>
         </div>
       </div>
     </div>
@@ -31,11 +34,15 @@
     >
       <div class="input-item">
         <span>网站地址：</span>
-        <el-input v-model="newWebCollect.url" autocomplete="off"></el-input>
+        <el-input v-model="newWebCollect.url" autocomplete="off" :placeholder="placeholderforurl"></el-input>
       </div>
       <div class="input-item">
         <span>名称：</span>
-        <el-input v-model="newWebCollect.webname" autocomplete="off"></el-input>
+        <el-input
+          v-model="newWebCollect.webname"
+          autocomplete="off"
+          :placeholder="placeholderforname"
+        ></el-input>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="ClearDialogInput">取 消</el-button>
@@ -50,13 +57,14 @@ export default {
   data() {
     return {
       defaultImg: "this.src='" + require('../../assets/img/default.png') + "'",
-      iconUrlOrigin: 'http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=',
       moreUseData: [],
       dialogFormVisible: false,
       newWebCollect: {
         url: '',
         webname: ''
-      }
+      },
+      placeholderforname: '请输入网站名',
+      placeholderforurl: '请输入网站地址'
     }
   },
   created() {
@@ -74,9 +82,20 @@ export default {
       localStorage.setItem('moreUseData', JSON.stringify(this.moreUseData))
     },
     AppendItemToCollect() {
-      this.moreUseData.push(JSON.parse(JSON.stringify(this.newWebCollect))) // 深拷贝
-      this.ClearDialogInput()
-      this.UpdataMoreUseData()
+      if (this.newWebCollect.webname != '' && this.newWebCollect.url != '') {
+        this.moreUseData.push(JSON.parse(JSON.stringify(this.newWebCollect))) // 深拷贝
+        this.ClearDialogInput()
+        this.UpdataMoreUseData()
+        this.placeholderforname = '请输入网站名'
+        this.placeholderforurl = '请输入网站地址'
+      } else {
+        if (this.newWebCollect.webname === '') {
+          this.placeholderforname = '网站名不能为空'
+        }
+        if (this.newWebCollect.url === '') {
+          this.placeholderforurl = '网站地址不能为空'
+        }
+      }
     },
     // 提示框关闭处理
     ClearDialogInput() {
@@ -93,16 +112,18 @@ export default {
         }
       }
       this.UpdataMoreUseData()
+    },
+    GotoUrl(url) {
+      window.location.href = `http://${url}`
+    },
+    GetWebIcon(url) {
+      return `http://${url}/favicon.ico`
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-a {
-  text-decoration: none;
-  color: #fff;
-}
 .input-item {
   display: flex;
   flex-direction: row;
@@ -117,8 +138,13 @@ a {
   }
 }
 .web-collect-container {
-  width: 568px;
+  width: 650px;
+  height: 350px;
   position: relative;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top:10px;
+  margin: 0 auto;
   span {
     font-size: 13px;
     color: #eee;
@@ -128,23 +154,24 @@ a {
   .bg-color {
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
     position: absolute;
     background-color: #777;
+    z-index:-1;
     opacity: 0.5;
-    z-index: -1;
   }
   .web-collect-item-container {
-    padding-top: 10px;
+    padding-top: 20px;
     width: 100%;
-    height: 260px;
     color: #fff;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     .web-collect-item {
       width: 100px;
-      height: 100px;
-      margin-left: 11.3px;
+      height: 120px;
+      margin-left: 25px;
       margin-bottom: 20px;
       transition: all 0.3s;
       .web-content {

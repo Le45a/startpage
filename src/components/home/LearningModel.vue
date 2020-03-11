@@ -94,6 +94,7 @@ export default {
   top: 0;
   left: 0;
   background-color: #062236;
+  z-index:100;
   .learn-content-container {
     width: 100%;
     margin-top: 15%;
@@ -118,6 +119,7 @@ export default {
     img {
       width: 40px;
       height: 40px;
+      cursor: pointer;
     }
   }
 }

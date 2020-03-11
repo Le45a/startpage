@@ -93,7 +93,10 @@ export default {
 .search-container {
   display: flex;
   flex-direction: row;
-  width: 600px;
+  width: 568px;
+  margin:0 auto;
+  margin-top:35px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.3);;
   .search-input {
     width: 400px;
     .el-input__inner {
